@@ -407,13 +407,15 @@ const Q = [
     opts:["1 a 10 personas", "11 a 50 personas", "51 a 200 personas", "Más de 200 personas"]},
   {id:"f3", type:"single", title:"¿A qué sector pertenece su empresa?",
     opts:["Comercio", "Servicios profesionales", "Manufactura o producción", "Salud o educación", "Construcción o inmobiliario", "Alimentos, restaurantes o turismo", "Transporte y logística", "Otro sector"]},
-  {id:"pr", type:"multi", max:6, opts:PR, groups:{0:"Procesos administrativos y financieros",5:"Procesos de operación",9:"Procesos comerciales y de servicio",11:"Otro"}, title:"¿Qué procesos manuales le generan más problemas?", help:"Elija hasta 6."},
-  {id:"p2", type:"single", title:"¿Cuántas horas por semana dedica su equipo a esas tareas manuales y repetitivas?", help:"Por ejemplo: digitar facturas, copiar datos entre archivos de Excel, hacer informes a mano o cuadrar inventarios. Sume a todo el equipo: 3 personas × 4 horas = 12 horas.",
+  {id:"pr", type:"multi", max:6, opts:PR, groups:{0:"Procesos administrativos y financieros",5:"Procesos de operación",9:"Procesos comerciales y de servicio",11:"Otro"}, title:"¿Qué procesos considera que le generan más dificultades para obtener mejores resultados?", help:"Elija hasta 6."},
+  {id:"p2", type:"single", title:"Aproximadamente, ¿cuántas horas por semana dedica su equipo a las tareas que no le dan resultados en el tiempo esperado?", help:"Por ejemplo: digitar facturas, copiar datos entre archivos de Excel, hacer informes a mano o cuadrar inventarios. Sume a todo el equipo: 3 personas × 4 horas = 12 horas.",
     opts:["Menos de 2 horas", "2 a 5 horas", "6 a 10 horas", "11 a 20 horas", "Más de 20 horas"]},
+  {id:"pq", type:"single", title:"¿Considera que esas tareas podrían realizarse en menos tiempo y con mejores resultados?",
+    opts:["Sí, definitivamente", "Probablemente sí", "No estoy seguro(a)", "Probablemente no", "No, ya se realizan de la mejor forma"]},
   {id:"p4", type:"single", title:"¿Usa algún programa para llevar la facturación, el inventario, la contabilidad u otro proceso administrativo o productivo?",
     help:"Por ejemplo, Siigo, World Office, Alegra o un sistema propio. Si solo usa Excel o papel, elija la primera opción.",
     opts:["No uso ningún programa", "Sí, y me sirve bien", "Sí, pero no se ajusta a mi forma de trabajar", "Lo usé, pero lo dejé"]},
-  {id:"pc", type:"single", title:"Aproximadamente, ¿cuánto dinero pierde al mes por esas tareas manuales?",
+  {id:"pc", type:"single", title:"Aproximadamente, ¿cuánto dinero calcula que le cuestan cada mes las tareas que le generan demoras?",
     help:"Multiplique las horas que su equipo dedica a esas tareas por lo que cuesta cada hora de trabajo. Si no lo sabe, elija «No lo sé».",
     opts:["Menos de $500 mil", "De $500 mil a $1 millón", "Más de $1 millón, hasta $2 millones", "Más de $2 millones, hasta $4 millones", "Más de $4 millones", "No lo sé"]},
   {id:"sol", type:"info", title:"Así podemos ayudarle"},
@@ -446,12 +448,12 @@ const Q = [
     help:"Hasta 2 opciones.",
     opts:["Que la inversión sea muy alta", "Que mi información quede en riesgo", "Que mi equipo no lo use", "No estar seguro de necesitarlo", "Preferir un aplicativo ya hecho", "Ninguna duda: la contrataría"]}
 ];
-const SEC = { pr: "Cómo trabaja hoy", pc: "Su situación actual", sol: "Nuestra solución", f1: "Su empresa", fa: "Su empresa", f2: "Su empresa", f3: "Su empresa", p2: "Cómo trabaja hoy", p4: "Cómo trabaja hoy", p11: "Precio", p12: "Precio", pa: "Precio", p6: "Interés", pu: "Lo que valora", fb: "Lo que valora", p8: "Lo que valora", p9: "Lo que valora" };
+const SEC = { pq: "Su opinión", pr: "Cómo trabaja hoy", pc: "Su situación actual", sol: "Nuestra solución", f1: "Su empresa", fa: "Su empresa", f2: "Su empresa", f3: "Su empresa", p2: "Cómo trabaja hoy", p4: "Cómo trabaja hoy", p11: "Precio", p12: "Precio", pa: "Precio", p6: "Interés", pu: "Lo que valora", fb: "Lo que valora", p8: "Lo que valora", p9: "Lo que valora" };
 const SOLUCION = [
-  ["⏱️", "pierde tiempo en tareas manuales y repetitivas", "Las automatizamos para que su equipo no repita el trabajo: facturación, inventarios y reportes."],
+  ["⏱️", "dedica mucho tiempo a tareas que no le dan resultados en el tiempo esperado", "Las agilizamos con un aplicativo a la medida: facturación, inventarios y reportes."],
   ["🧩", "usa herramientas que no se ajustan a su empresa", "Un aplicativo hecho a la medida: se adapta a su forma de trabajar, no al contrario."],
   ["☁️", "tiene la información dispersa o se le pierde", "Todo centralizado en un entorno seguro en la nube."],
-  ["🤝", "su equipo no adopta lo nuevo", "Capacitamos a su personal y lo acompañamos con soporte y actualizaciones continuas."]
+  ["🤝", "observa que su equipo no adopta lo nuevo", "Capacitamos a su personal y lo acompañamos con soporte y actualizaciones continuas."]
 ];
 const QBY = {}; Q.forEach(q => { q.sec = SEC[q.id] || ""; QBY[q.id] = q; });
 const HRS_MID = [1, 3.5, 8, 15.5, 25];
@@ -627,7 +629,7 @@ function showQ(id) {
   }
   else if (q.type === "info") {
     const mine = (st.ans.pr || []).map(i => PR_SHORT[i]);
-    body.innerHTML = (mine.length ? '<p class="help" style="margin-top:0">Usted nos contó que sus mayores dificultades están en: <b>' + esc(mine.slice(0, 3).join(", ")) + (mine.length > 3 ? " y " + (mine.length - 3) + " más" : "") + '</b>.</p>' : "") +
+    body.innerHTML = (mine.length ? '<p class="help" style="margin-top:0">Usted señaló estos procesos como los que más dificultades le generan: <b>' + esc(mine.slice(0, 3).join(", ")) + (mine.length > 3 ? " y " + (mine.length - 3) + " más" : "") + '</b>.</p>' : "") +
       '<div class="sol">' + SOLUCION.map((x, i) => '<div class="sr" style="animation-delay:' + (i * 0.12) + 's"><div class="si">' + x[0] + '</div><div><div class="sp">Si usted ' + esc(x[1]) + '</div><div class="ss">✔ ' + esc(x[2]) + '</div></div></div>').join("") +
       '<div class="splus"><b>✨ El plus de SOFUX</b><span>Empezamos por <u>un solo módulo</u>, el que más lo necesite, y crecemos con su negocio. Usted no cambia su forma de trabajar: <u>el aplicativo se ajusta a ella</u>. Primer módulo en <u>4 a 8 semanas</u>, según el proceso.</span></div></div>';
     act.innerHTML = '<button class="btn" id="nx">Continuar</button>' + backBtn;
@@ -635,7 +637,7 @@ function showQ(id) {
   }
   else if (q.type === "combo") {
     const sel = st.ans.pr = st.ans.pr || [];
-    body.innerHTML = '<h3 class="sub">1. ¿Qué procesos manuales le generan más problemas? <span>Elija hasta 6.</span></h3><div class="opts" id="bpr">' +
+    body.innerHTML = '<h3 class="sub">1. ¿Qué procesos considera que le generan más dificultades para obtener mejores resultados? <span>Elija hasta 6.</span></h3><div class="opts" id="bpr">' +
       PR.map((o, i) => (q.groups && q.groups[i] ? '<div class="grp">' + esc(q.groups[i]) + '</div>' : "") + '<button class="opt multi' + (sel.indexOf(i) >= 0 ? " on" : "") + '" data-i="' + i + '"><span class="mk">✓</span><span>' + esc(o) + '</span></button>').join("") + '</div>' +
       '<h3 class="sub">2. ¿Cuántas horas por semana dedica su equipo a esas tareas manuales y repetitivas? <span>Por ejemplo: digitar facturas, copiar datos entre archivos de Excel, hacer informes a mano o cuadrar inventarios. Sume a todo el equipo: 3 personas × 4 horas = 12 horas.</span></h3><div class="opts" id="bhr">' +
       q.opts.map((o, i) => '<button class="opt' + (st.ans.p2 === i ? " on" : "") + '" data-i="' + i + '"><span class="mk">✓</span><span>' + esc(o) + '</span></button>').join("") + '</div>';
@@ -872,7 +874,7 @@ function renderThanks(r) {
     '<div class="hero2">' + ringSvg(score) + '<div class="tx"><b>Su empresa tiene una oportunidad de mejora</b><span class="lvl">' + sLvl.toUpperCase() + '</span></div></div>' +
     '<p class="tiny" style="margin:0 0 10px">El círculo mide de 0 a 100 cuánto puede mejorar su empresa: entre más alto, mayor la oportunidad.</p>' +
     '<div class="stats">' +
-    '<div class="st">' + IC_CLOCK + '<b>' + year.toLocaleString("es-CO") + ' horas</b><span>al año en tareas manuales y repetitivas</span></div>' +
+    '<div class="st">' + IC_CLOCK + '<b>' + year.toLocaleString("es-CO") + ' horas</b><span>al año en tareas que no dan resultados a tiempo</span></div>' +
     '<div class="st">' + IC_COIN + '<b>≈ ' + cop(costo) + '</b><span>al año en tiempo y errores*</span></div></div>' +
     '<p class="tiny">* ' + costoTxt + '. Es una estimación con sus respuestas.</p>' +
     '<div class="gain"><span class="gk">Lo que podríamos lograr</span><b class="gb">Devolverle ese tiempo a su equipo</b>' +
@@ -1166,6 +1168,7 @@ function loadAdmin(all, citas, conts) {
   h += procTable(rows);
   h += '<div class="grid c2" style="margin-top:14px">' +
     bars("Horas por semana en tareas manuales (P2)", QBY.p2, rows, "p2") +
+    bars("¿Podrían hacerse en menos tiempo y con mejores resultados?", QBY.pq, rows, "pq") +
     scaleBars("Intención de contratar (P6) · Parte 2 · respuestas: " + rows.filter(r => r.p6 != null).length, rows.filter(r => r.p6 != null), "p6", "nada probable", "muy probable") +
     bars("Aplicativo de gestión actual (P4)", QBY.p4, rows, "p4") +
     bars("Factores determinantes al contratar (P8) · respuestas: " + rows.filter(r => r.p8 != null).length, QBY.p8, rows.filter(r => r.p8 != null), "p8", true) +
@@ -1183,8 +1186,8 @@ function loadAdmin(all, citas, conts) {
     '<h3>Enlaces para compartir (muestran por dónde llegan las respuestas)</h3>' +
     ["whatsapp", "linkedin", "correo", "referido"].map(c => '<div class="row" style="margin:6px 0"><code style="font-size:12px;word-break:break-all;flex:1">' + esc(base + "?src=" + c) + '</code><button class="btn small ghost cpl" data-u="' + esc(base + "?src=" + c) + '">Copiar</button></div>').join("") + '</div>' +
     '</div>';
-  const OBJ = { f1: "Perfil", fa: "Perfil", f2: "Perfil", f3: "Perfil", pr: "Objetivo específico 1", p2: "Objetivo específico 1", p4: "Objetivo específico 1", pu: "Objetivo específico 2", p8: "Objetivo específico 2", p9: "Objetivo específico 2", fb: "Objetivo específico 2", p6: "Objetivo específico 3", p11: "Objetivo específico 3", p12: "Objetivo específico 3", pa: "Objetivo específico 3" },
-  MIDE = { em: "Contacto para el diagnóstico", f1: "Filtro: quién decide", fa: "Grupo: área a cargo", fb: "Producto: áreas beneficiadas", f2: "Filtro: tamaño de la empresa", f3: "Grupo prioritario (Plaza)", pr: "Problema real · Producto", p2: "Problema real · Producto", p3: "Problema real · Producto", p4: "Oportunidad en el mercado · Competencia", pr: "Producto: partes del aplicativo", pu: "Producto: prioridad", p6: "Interés de compra", p8: "Producto: lo que valoran", p9: "Promoción: objeciones", p11: "Precio", p12: "Precio", pa: "Precio: decisión de contratar" };
+  const OBJ = { f1: "Perfil", fa: "Perfil", f2: "Perfil", f3: "Perfil", pr: "Objetivo específico 1", p2: "Objetivo específico 1", pq: "Objetivo específico 1", p4: "Objetivo específico 1", pu: "Objetivo específico 2", p8: "Objetivo específico 2", p9: "Objetivo específico 2", fb: "Objetivo específico 2", p6: "Objetivo específico 3", p11: "Objetivo específico 3", p12: "Objetivo específico 3", pa: "Objetivo específico 3" },
+  MIDE = { em: "Contacto para el diagnóstico", f1: "Filtro: quién decide", fa: "Grupo: área a cargo", fb: "Producto: áreas beneficiadas", f2: "Filtro: tamaño de la empresa", f3: "Grupo prioritario (Plaza)", pr: "Problema real · Producto", p2: "Problema real · Producto", pq: "Problema real · Producto", p3: "Problema real · Producto", p4: "Oportunidad en el mercado · Competencia", pr: "Producto: partes del aplicativo", pu: "Producto: prioridad", p6: "Interés de compra", p8: "Producto: lo que valoran", p9: "Promoción: objeciones", p11: "Precio", p12: "Precio", pa: "Precio: decisión de contratar" };
   const COND = { pu: "Solo se muestra si la persona marcó 2 o más procesos en la pregunta de procesos de la Parte 1.", fa: "Solo se muestra si en F1 eligió «Encargado o jefe de un área de la empresa».", fb: "Solo se muestra si en F1 eligió «Encargado o jefe de un área de la empresa»." };
   const qopts = q => {
     if (q.type === "matrix") return '<p class="muted" style="margin:6px 0 0;font-size:13px">Escala ' + esc(q.lo) + ' a ' + esc(q.hi) + ' para cada situación:</p><ul>' + q.rows.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul>';
@@ -1307,7 +1310,7 @@ function fakeRows(n) {
       t: Date.now() - R(1e9), dur: 100 + R(200), src: ["whatsapp", "linkedin", "referido", "directo"][R(4)],
       f1: R(3), f2: R(3), f3: R(8), p2: R(5),
       p3: [0, 0, 0, 0].map(() => Math.max(1, Math.min(5, pain + R(3) - 1))), p4: R(4), pr: pr, pu: pr[R(pr.length)], p6: 1 + R(5),
-      p8: [R(5)], p9: [R(6)], pc: R(6), p11: R(5), p12: R(5), pa: R(6)
+      p8: [R(5)], p9: [R(6)], pq: R(5), pc: R(6), p11: R(5), p12: R(5), pa: R(6)
     });
   }
   out.forEach(r => { if (r.f1 === 2) { r.fa = R(9); const k = 1 + R(3), a = []; while (a.length < k) { const x = R(9); if (a.indexOf(x) < 0) a.push(x); } r.fb = a; } });
