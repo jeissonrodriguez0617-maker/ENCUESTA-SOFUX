@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Encuesta SOFUX · Gestión de la información empresarial</title>
-<meta name="description" content="Conozca SOFUX y responda una encuesta de 5 minutos sobre los procesos de su empresa. Reciba gratis un diagnóstico preliminar con prioridades.">
+<meta name="description" content="Conozca SOFUX y responda una encuesta de 6 minutos sobre los procesos de su empresa. Reciba gratis un diagnóstico preliminar con prioridades.">
 <meta name="theme-color" content="#070d18">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -408,14 +408,14 @@ const Q = [
   {id:"f3", type:"single", title:"¿A qué sector pertenece su empresa?",
     opts:["Comercio", "Servicios profesionales", "Manufactura o producción", "Salud o educación", "Construcción o inmobiliario", "Alimentos, restaurantes o turismo", "Transporte y logística", "Otro sector"]},
   {id:"pr", type:"multi", max:6, opts:PR, groups:{0:"Procesos administrativos y financieros",5:"Procesos de operación",9:"Procesos comerciales y de servicio",11:"Otro"}, title:"¿Qué procesos considera que le generan más dificultades para obtener mejores resultados?", help:"Elija hasta 6."},
-  {id:"p2", type:"single", title:"Aproximadamente, ¿cuántas horas por semana dedica su equipo a las tareas que no le dan resultados en el tiempo esperado?", help:"Por ejemplo: digitar facturas, copiar datos entre archivos de Excel, hacer informes a mano o cuadrar inventarios. Sume a todo el equipo: 3 personas × 4 horas = 12 horas.",
+  {id:"p2", type:"single", title:"Aproximadamente, ¿cuántas horas por semana dedica su equipo a los procesos que seleccionó?", help:"Por ejemplo: digitar facturas, copiar datos entre archivos de Excel, hacer informes a mano o cuadrar inventarios. Sume a todo el equipo: 3 personas × 4 horas = 12 horas.",
     opts:["Menos de 2 horas", "2 a 5 horas", "6 a 10 horas", "11 a 20 horas", "Más de 20 horas"]},
   {id:"pq", type:"single", title:"¿Considera que esas tareas podrían realizarse en menos tiempo y con mejores resultados?",
     opts:["Sí, definitivamente", "Probablemente sí", "No estoy seguro(a)", "Probablemente no", "No, ya se realizan de la mejor forma"]},
   {id:"p4", type:"single", title:"¿Usa algún programa para llevar la facturación, el inventario, la contabilidad u otro proceso administrativo o productivo?",
     help:"Por ejemplo, Siigo, World Office, Alegra o un sistema propio. Si solo usa Excel o papel, elija la primera opción.",
     opts:["No uso ningún programa", "Sí, y me sirve bien", "Sí, pero no se ajusta a mi forma de trabajar", "Lo usé, pero lo dejé"]},
-  {id:"pc", type:"single", title:"Aproximadamente, ¿cuánto dinero calcula que le cuestan cada mes las tareas que le generan demoras?",
+  {id:"pc", type:"single", title:"Aproximadamente, ¿cuánto dinero calcula que le cuestan al mes las demoras de esos procesos?",
     help:"Multiplique las horas que su equipo dedica a esas tareas por lo que cuesta cada hora de trabajo. Si no lo sabe, elija «No lo sé».",
     opts:["Menos de $500 mil", "De $500 mil a $1 millón", "Más de $1 millón, hasta $2 millones", "Más de $2 millones, hasta $4 millones", "Más de $4 millones", "No lo sé"]},
   {id:"sol", type:"info", title:"Así podemos ayudarle"},
@@ -542,7 +542,7 @@ function renderWelcome() {
   root().innerHTML = header() +
     (DEMO ? '<div class="demo"><b>Modo de prueba:</b> las respuestas se guardan solo en este navegador.</div>' : "") +
     '<section class="card">' +
-    '<span class="badge">5 minutos · confidencial</span>' +
+    '<span class="badge">6 minutos · confidencial</span>' +
     '<h1 style="margin-top:12px">Aplicativos a la medida para su empresa</h1>' +
     '<p class="lead">SOFUX desarrolla herramientas digitales a la medida para resolver los procesos de su empresa. Queremos conocer cómo trabaja y qué necesita.</p>' +
     '<p class="tiny" style="margin:6px 0 0">Estudio de mercado de un proyecto de grado. Respuestas anónimas, solo con fines académicos; no es una oferta de venta.</p>' +
@@ -858,27 +858,30 @@ function renderThanks(r) {
   const declarado = r.pc != null && PC_MID[r.pc] ? PC_MID[r.pc] * 12 : null;
   const costo = declarado || costoEst, costoTxt = declarado ? "según la cifra que usted indicó" : "referencia: salario mínimo 2026 (el costo real suele ser mayor)";
   const mkv = [20, 0, 10, 10][r.p4 != null ? r.p4 : 0];
-  const score = Math.min(100, Math.round(((r.p2 || 0) + 1) / 5 * 40 + Math.min(procs.length, 6) / 6 * 30 + mkv + (r.pc != null ? (r.pc === 5 ? 5 : r.pc / 4 * 10) : 0)));
+  const score = Math.min(100, Math.round(((r.p2 || 0) + 1) / 5 * 30 + Math.min(procs.length, 6) / 6 * 20 + mkv * 0.75 + (r.pc != null ? (r.pc === 5 ? 5 : r.pc / 4 * 10) : 5) + (r.pq != null ? (4 - r.pq) / 4 * 25 : 12)));
   const sLvl = score >= 70 ? "alta" : score >= 40 ? "media" : "baja";
   const first = procs.length ? (r.pu != null ? r.pu : procs[0]) : null;
   const order = first != null ? [first].concat(procs.filter(x => x !== first)) : [];
   const procN = first != null ? PR_SHORT[first] : "su proceso prioritario";
   const wYear = Math.max(1, Math.round(year / 42));
   const link = location.origin + location.pathname;
-  const shareText = "Respondí una encuesta de 5 minutos sobre cómo gestionan los procesos las empresas y recibí un diagnóstico gratuito. Si tiene empresa, puede responderla aquí: ";
+  const shareText = "Respondí una encuesta de 6 minutos sobre cómo gestionan los procesos las empresas y recibí un diagnóstico gratuito. Si tiene empresa, puede responderla aquí: ";
   const waLink = "https://wa.me/" + WA_NUM + "?text=" + encodeURIComponent("Hola Jeisson, respondí la encuesta de SOFUX y me interesa que me contacten. Mi proceso prioritario es: " + procN + ".");
   const shown = order.slice(0, 3);
   mailDiagnosis({ nivel: sLvl.toUpperCase(), puntaje: score, horas_anio: year.toLocaleString("es-CO"), costo_anio: cop(costo), proceso_prioritario: procN, enlace: link });
   root().innerHTML = header() +
     '<section class="card"><span class="badge">Gracias por participar</span><h1 style="margin:12px 0 0">Su diagnóstico inicial</h1>' +
-    '<div class="hero2">' + ringSvg(score) + '<div class="tx"><b>Su empresa tiene una oportunidad de mejora</b><span class="lvl">' + sLvl.toUpperCase() + '</span></div></div>' +
+    '<div class="hero2">' + ringSvg(score) + '<div class="tx"><b>' + (score >= 70 ? 'Su empresa tiene una gran oportunidad de mejora' : score >= 40 ? 'Su empresa tiene una oportunidad de mejora' : 'Su empresa ya trabaja con orden; hay oportunidades puntuales') + '</b><span class="lvl">' + sLvl.toUpperCase() + '</span></div></div>' +
     '<p class="tiny" style="margin:0 0 10px">El círculo mide de 0 a 100 cuánto puede mejorar su empresa: entre más alto, mayor la oportunidad.</p>' +
     '<div class="stats">' +
     '<div class="st">' + IC_CLOCK + '<b>' + year.toLocaleString("es-CO") + ' horas</b><span>al año en tareas que no dan resultados a tiempo</span></div>' +
     '<div class="st">' + IC_COIN + '<b>≈ ' + cop(costo) + '</b><span>al año en tiempo y errores*</span></div></div>' +
-    '<p class="tiny">* ' + costoTxt + '. Es una estimación con sus respuestas.</p>' +
-    '<div class="gain"><span class="gk">Lo que podríamos lograr</span><b class="gb">Devolverle ese tiempo a su equipo</b>' +
-    '<p>Hoy esas tareas ocupan <b>' + wYear + ' semana' + (wYear === 1 ? "" : "s") + ' de trabajo de una persona al año</b>. Con un aplicativo hecho a su medida, ese tiempo puede dedicarse a vender, atender mejor a sus clientes y hacer crecer su empresa.</p>' +
+    '<p class="tiny" style="font-size:11.5px;line-height:1.5;opacity:.75">* <b>Cómo se calculó.</b> Horas: ' + h.toLocaleString("es-CO") + ' horas por semana (valor medio del rango que usted eligió) × 48 semanas al año = ' + year.toLocaleString("es-CO") + ' horas. ' +
+      (declarado ? 'Costo: usted indicó que estas tareas le cuestan «' + esc(QBY.pc.opts[r.pc]) + '» al mes; se tomó el valor medio de ese rango (' + cop(PC_MID[r.pc]) + ') × 12 meses = ' + cop(declarado) + '.' : 'Costo: ' + year.toLocaleString("es-CO") + ' horas × ' + cop(VALOR_HORA) + ' por hora (salario mínimo 2026 de $1.750.905 ÷ 182 horas al mes, sin prestaciones) = ' + cop(costoEst) + '. El costo real suele ser mayor.') +
+      ' Las semanas de trabajo equivalen a esas horas ÷ 42 horas semanales. Es una estimación con sus respuestas, no un dato exacto.</p>' +
+    '<div class="gain"><span class="gk">Lo que podríamos lograr</span>' + (r.pq >= 3 ?
+      '<b class="gb">Más control con menos esfuerzo</b><p>Usted considera que sus procesos ya funcionan bien. Aun así, un aplicativo hecho a su medida puede darle más control de la información y liberar tiempo de su equipo para vender, atender a sus clientes y crecer.</p>' :
+      '<b class="gb">Devolverle ese tiempo a su equipo</b><p>Hoy esos procesos ocupan <b>' + wYear + ' semana' + (wYear === 1 ? "" : "s") + ' de trabajo de una persona al año</b>. Con un aplicativo hecho a su medida, ese tiempo puede dedicarse a vender, atender mejor a sus clientes y hacer crecer su empresa.</p>') +
     '<small>El alcance y los resultados se definen en el diagnóstico de su empresa.</small></div>' +
     (shown.length ? '<h3>Qué haríamos en sus procesos</h3><div class="mods">' + shown.map((i, k) => '<div class="mod' + (k === 0 ? " first" : "") + '"><div class="mh"><span class="n">' + (k + 1) + '</span><b>' + esc(PR_SHORT[i]) + '</b>' + (k === 0 ? '<i>Empezaríamos aquí</i>' : "") + '</div><p>' + esc(SOL[i]) + '</p></div>').join("") + '</div>' + (order.length > 3 ? '<p class="tiny">Y ' + (order.length - 3) + ' proceso' + (order.length - 3 === 1 ? "" : "s") + ' más que se pueden ampliar por etapas.</p>' : "") : "") +
     '<h3>Su ruta con SOFUX</h3><div class="road">' +
