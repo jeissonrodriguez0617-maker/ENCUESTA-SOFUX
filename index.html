@@ -410,15 +410,14 @@ const Q = [
   {id:"pr", type:"multi", max:6, opts:PR, groups:{0:"Procesos administrativos y financieros",5:"Procesos de operación",9:"Procesos comerciales y de servicio",11:"Otro"}, title:"¿Qué procesos considera que le generan más dificultades para obtener mejores resultados?", help:"Elija hasta 6."},
   {id:"p2", type:"single", title:"Aproximadamente, ¿cuántas horas por semana dedica su equipo a los procesos que seleccionó?", help:"Por ejemplo: digitar facturas, copiar datos entre archivos de Excel, hacer informes a mano o cuadrar inventarios. Sume a todo el equipo: 3 personas × 4 horas = 12 horas.",
     opts:["Menos de 2 horas", "2 a 5 horas", "6 a 10 horas", "11 a 20 horas", "Más de 20 horas"]},
-  {id:"pq", type:"single", title:"¿Considera que esas tareas podrían realizarse en menos tiempo y con mejores resultados?",
+  {id:"pq", type:"single", title:"¿Cree que una herramienta digital permitiría realizar esas tareas de forma más eficiente?",
     opts:["Sí, definitivamente", "Probablemente sí", "No estoy seguro(a)", "Probablemente no", "No, ya se realizan de la mejor forma"]},
   {id:"p4", type:"single", title:"¿Usa algún programa para llevar la facturación, el inventario, la contabilidad u otro proceso administrativo o productivo?",
     help:"Por ejemplo, Siigo, World Office, Alegra o un sistema propio. Si solo usa Excel o papel, elija la primera opción.",
     opts:["No uso ningún programa", "Sí, y me sirve bien", "Sí, pero no se ajusta a mi forma de trabajar", "Lo usé, pero lo dejé"]},
-  {id:"pc", type:"single", title:"Aproximadamente, ¿cuánto dinero calcula que le cuestan al mes las demoras de esos procesos?",
+  {id:"pc", type:"single", title:"Aproximadamente, ¿cuánto dinero calcula que le cuesta al mes realizar esas tareas de forma poco eficiente?",
     help:"Multiplique las horas que su equipo dedica a esas tareas por lo que cuesta cada hora de trabajo. Si no lo sabe, elija «No lo sé».",
     opts:["Menos de $500 mil", "De $500 mil a $1 millón", "Más de $1 millón, hasta $2 millones", "Más de $2 millones, hasta $4 millones", "Más de $4 millones", "No lo sé"]},
-  {id:"sol", type:"info", title:"Así podemos ayudarle"},
   {id:"p11", type:"single", title:"¿Cuánto invertiría como máximo, en un solo pago, en el aplicativo para el proceso que más lo necesite?",
     help:"Valores en pesos colombianos.",
     ctxT:"Cómo se ajusta SOFUX a su presupuesto",
@@ -1171,7 +1170,7 @@ function loadAdmin(all, citas, conts) {
   h += procTable(rows);
   h += '<div class="grid c2" style="margin-top:14px">' +
     bars("Horas por semana en tareas manuales (P2)", QBY.p2, rows, "p2") +
-    bars("¿Podrían hacerse en menos tiempo y con mejores resultados?", QBY.pq, rows, "pq") +
+    bars("¿Una herramienta digital haría esas tareas más eficientes?", QBY.pq, rows, "pq") +
     scaleBars("Intención de contratar (P6) · Parte 2 · respuestas: " + rows.filter(r => r.p6 != null).length, rows.filter(r => r.p6 != null), "p6", "nada probable", "muy probable") +
     bars("Aplicativo de gestión actual (P4)", QBY.p4, rows, "p4") +
     bars("Factores determinantes al contratar (P8) · respuestas: " + rows.filter(r => r.p8 != null).length, QBY.p8, rows.filter(r => r.p8 != null), "p8", true) +
