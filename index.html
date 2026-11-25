@@ -305,6 +305,21 @@ textarea:focus,input:focus,select:focus{border-color:var(--accent);box-shadow:0 
   .bars .t i,.mb i{background:#0e7c7b}
 }
 @media print{.noprint{display:none!important}}
+@media print{
+  @page{background:#fff}
+  html{color-scheme:light!important}
+  html,body.printall{background:#fff!important}
+  body.printall *{animation:none!important;transition:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  body.printall{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.printall [data-tab]{display:block!important;break-before:page}
+  body.printall [data-tab="v"]{break-before:auto}
+  body.printall [data-tab]::before{content:attr(data-title);display:block;font-weight:800;font-size:22px;margin:0 0 12px;padding-bottom:6px;border-bottom:2px solid #0e7c7b;color:#0e7c7b}
+  body.printall .card.noprint{display:block!important}
+  body.printall .tabs,body.printall .row.noprint,body.printall .btn,body.printall .rk,body.printall .gear{display:none!important}
+  body.printall .det{display:table-row!important}
+  body.printall [style*="max-height"]{max-height:none!important;overflow:visible!important}
+  body.printall tr{break-inside:avoid}
+}
 </style>
 </head>
 <body>
@@ -429,10 +444,13 @@ const Q = [
     help:"Valores en pesos colombianos.",
     ctx:"La mensualidad cubre el soporte posventa, las actualizaciones continuas y el almacenamiento seguro en la nube.",
     opts:["Menos de $350 mil","De $350 mil a $500 mil","Más de $500 mil, hasta $750 mil","Más de $750 mil, hasta $1 millón","Más de $1 millón"]},
-  {id:"pa", type:"single", title:"Con este precio, ¿contrataría SOFUX para su empresa?",
-    ctxT:"Precio de referencia: qué recibe por cada valor",
-    ctx:'<div class="offer"><div class="of main"><span class="ot">1 · Módulo a la medida</span><span class="op">$9.500.000 <em>pago único por proyecto</em></span><small>Incluye el diagnóstico de sus procesos en su empresa, el diseño y desarrollo de un módulo para el proceso que más lo necesite (por ejemplo, facturación, inventarios o reportes) y la capacitación de su equipo.</small></div><div class="of"><span class="ot">2 · Suscripción mensual</span><span class="op">$350.000 <em>al mes</em></span><small>Soporte posventa, actualizaciones continuas y su información guardada de forma segura en la nube.</small></div></div><p class="tiny" style="margin:10px 0 0">Para comparar: sume lo que hoy gasta en licencias de programas, horas extra, errores y personal dedicado a estas tareas. Se empieza por un solo módulo y se amplía por etapas. Un primer módulo suele entregarse <b>entre 4 y 8 semanas</b>, según el proceso; el alcance y el plazo exacto se acuerdan con usted en el diagnóstico, antes de desarrollar. Valores en pesos colombianos.</p>',
-    opts:["Sí, lo contrataría con este precio", "Sí, pero pagándolo en cuotas o por etapas", "Lo consideraría solo si baja el precio o el alcance", "Probablemente no lo contrataría", "No, no lo contrataría", "Aún no lo tengo claro"]},
+  {id:"pa", type:"single", title:"Con estos planes, ¿contrataría SOFUX para su empresa?",
+    ctxT:"Los planes de SOFUX: qué recibe por cada valor",
+    ctx:'<div class="offer"><div class="of"><span class="ot">1 · Piloto</span><span class="op">$750.000 <em>pago único</em></span><small>Diagnóstico de sus procesos, 1 flujo funcionando y una calculadora de ahorro de horas. Se abona al plan siguiente si decide continuar.</small></div><div class="of main"><span class="ot">2 · Arranque</span><span class="op">$2.550.000 <em>por proyecto</em></span><small>1 módulo completo para su proceso más urgente, capacitación, guía de uso, protección de datos personales, exportación de su información y 1 mes de soporte.</small></div><p class="tiny">Un primer módulo suele entregarse entre 4 y 8 semanas; el alcance exacto se acuerda en el diagnóstico, antes de desarrollar. Precios de referencia de lanzamiento, en pesos colombianos.</p></div>',
+    opts:["Sí, lo contrataría con estos precios", "Sí, pero pagándolo en cuotas o por etapas", "Lo consideraría solo si baja el precio o el alcance", "Probablemente no lo contrataría", "No, no lo contrataría", "Aún no lo tengo claro"]},
+  {id:"pp", type:"single", skip:a=>a.pa===4, title:"¿Cuál de estos planes le interesaría más?",
+    help:"Elija el que mejor se ajuste a lo que necesita hoy.",
+    opts:["Piloto · $750.000", "Arranque · $2.550.000", "Ninguno por ahora"]},
   {id:"p6", b2:true, type:"scale", title:"¿Qué tan probable es que su empresa contrate SOFUX en los próximos 12 meses?",
     help:"1 = nada probable · 5 = muy probable.", lo:"1 · Nada probable", hi:"5 · Muy probable",
     ctxT:"La propuesta de SOFUX",
@@ -449,7 +467,7 @@ const Q = [
     help:"Hasta 2 opciones.",
     opts:["Que la inversión sea muy alta", "Que mi información quede en riesgo", "Que mi equipo no lo use", "No estar seguro de necesitarlo", "Preferir un aplicativo ya hecho", "Ninguna duda: la contrataría"]}
 ];
-const SEC = { pq: "Su opinión", pr: "Cómo trabaja hoy", pc: "Su situación actual", sol: "Nuestra solución", f1: "Su empresa", fa: "Su empresa", f2: "Su empresa", f3: "Su empresa", f3b: "Su empresa", p2: "Cómo trabaja hoy", p4: "Cómo trabaja hoy", p11: "Precio", p12: "Precio", pa: "Precio", p6: "Interés", pu: "Lo que valora", fb: "Lo que valora", p8: "Lo que valora", p9: "Lo que valora" };
+const SEC = { pq: "Su opinión", pr: "Cómo trabaja hoy", pc: "Su situación actual", sol: "Nuestra solución", f1: "Su empresa", fa: "Su empresa", f2: "Su empresa", f3: "Su empresa", f3b: "Su empresa", p2: "Cómo trabaja hoy", p4: "Cómo trabaja hoy", p11: "Precio", p12: "Precio", pa: "Precio", pp: "Precio", p6: "Interés", pu: "Lo que valora", fb: "Lo que valora", p8: "Lo que valora", p9: "Lo que valora" };
 const SOLUCION = [
   ["⏱️", "dedica mucho tiempo a tareas que no le dan resultados en el tiempo esperado", "Las agilizamos con un aplicativo a la medida: facturación, inventarios y reportes."],
   ["🧩", "usa herramientas que no se ajustan a su empresa", "Un aplicativo hecho a la medida: se adapta a su forma de trabajar, no al contrario."],
@@ -757,7 +775,7 @@ function showQ(id) {
 
 /* ============ ENVÍO ============ */
 function buildRecord() {
-  const a = st.ans, r = { t: Date.now(), dur: Math.round((Date.now() - st.start) / 1000), src: SRC };
+  const a = st.ans, r = { t: Date.now(), dur: Math.round((Date.now() - st.start) / 1000), src: SRC, v: 2 };
   Q.filter(q => !q.b2 && q.id !== "em").forEach(q => {
     const v = a[q.id];
     if (v === undefined || v === null || v === "") return;
@@ -889,7 +907,7 @@ function renderThanks(r) {
     '<div class="rs"><span class="rn">1</span><div><b>Diagnóstico (semana 1)</b><small>Revisamos cómo trabaja su empresa y dónde se pierde más tiempo.</small></div></div>' +
     '<div class="rs"><span class="rn">2</span><div><b>Primer módulo: ' + esc(procN) + ' (4 a 8 semanas)</b><small>Un aplicativo a la medida, con capacitación para su equipo.</small></div></div>' +
     '<div class="rs"><span class="rn">3</span><div><b>Crecer por etapas</b><small>Ampliamos a otros procesos con soporte y mejoras continuas.</small></div></div></div>' +
-    '<p class="tiny">Inversión de referencia: ' + cop(PRECIO_UNICO) + ' por el módulo a la medida (pago único por proyecto) + ' + cop(PRECIO_MES) + ' al mes de suscripción con soporte y mejoras. ' + 'Se empieza por un solo módulo y se amplía según las necesidades de su empresa.</p>' +
+    '<p class="tiny">Inversión de referencia: Piloto por ' + cop(750000) + ' (abonable al plan siguiente) y Arranque por ' + cop(2550000) + ' (un módulo completo). ' + 'Se empieza por un solo módulo y se amplía según las necesidades de su empresa.</p>' +
     (st.b2done ? '<div class="b2 done"><b>¡Gracias por las respuestas adicionales!</b><span>Nos ayudan a diseñar mejor el servicio.</span></div>' : '<div class="b2"><div><b>¿Nos regala un par de minutos más?</b><span>Son ' + Q.filter(q => q.b2 && (!q.skip || !q.skip(st.ans))).length + ' preguntas rápidas y opcionales para diseñar mejor el servicio.</span></div><button class="btn small" id="b2go">Responder</button></div>') +
     '<div class="cta wa"><p style="margin:0 0 10px"><b>¿Le interesa que lo contactemos?</b> Comuníquese por WhatsApp al <b>' + WA_VISIBLE + '</b> (Jeisson Rodríguez) y revisamos su caso, sin costo y sin compromiso.</p>' +
     '<a class="btn" style="width:100%;text-decoration:none;display:grid;place-items:center;box-sizing:border-box" target="_blank" rel="noopener" href="' + waLink + '">Escribir por WhatsApp</a></div>' +
@@ -1040,7 +1058,7 @@ const idset0 = ids => { const o = {}; ids.forEach(i => o[i] = 1); return o; };
 function loadAdmin(all, citas, conts) {
   citas = citas || []; conts = conts || [];
   const cfg = adminCfg();
-  const sus = r => (r.dur || 0) < MIN_SECONDS;
+  const sus = r => !r.imp && (r.dur || 0) < MIN_SECONDS;
   const rows = all.filter(r => !sus(r));
   const A = analyze(rows, cfg);
   const okCount = A.crit.filter(c => c.ok).length;
@@ -1050,7 +1068,7 @@ function loadAdmin(all, citas, conts) {
   const bySrc = {}; all.forEach(r => bySrc[r.src || "directo"] = (bySrc[r.src || "directo"] || 0) + 1);
   const base = location.origin + location.pathname;
 
-  let h = header('<div class="row noprint"><a class="btn small ghost" id="ve" style="text-decoration:none;display:inline-grid;place-items:center" href="#">Ver encuesta</a><button class="btn small ghost" id="csv">Descargar datos (Excel)</button>' +
+  let h = header('<div class="row noprint"><a class="btn small ghost" id="ve" style="text-decoration:none;display:inline-grid;place-items:center" href="#">Ver encuesta</a><button class="btn small ghost" id="csv">Descargar datos (Excel)</button><button class="btn small" id="pdfall">Descargar PDF completo</button><button class="btn small" id="solor">Descargar solo respuestas</button><button class="btn small ghost" id="delimp">Eliminar importadas</button>' +
     (DEMO ? '<button class="btn small ghost" id="seed">Cargar datos de ejemplo</button><button class="btn small ghost" id="clr">Borrar datos de prueba</button>' : '') + '</div>');
   if (DEMO) h += '<div class="demo"><b>Modo de prueba:</b> estos datos se guardan solo en este navegador. Los de ejemplo son inventados y sirven únicamente para ver cómo funciona el panel.</div>';
   const tabs = [["v", "Viabilidad y mercadeo"], ["i", "Informe de resultados"], ["g", "Gráficos por pregunta"], ["r", "Todas las respuestas"], ["q", "Ver cuestionario"], ["c", "Administrar respuestas"]];
@@ -1065,7 +1083,7 @@ function loadAdmin(all, citas, conts) {
     '<label>y mensualidad de al menos: <select id="cM">' + bandOpts("p12", cfg.pMes) + '</select></label></div>';
   h += '<div class="grid c4">' + A.crit.map(c => '<div class="kpi ' + (c.ok ? "ok" : "bad") + '"><div class="st">' + (c.ok ? "CUMPLE" : "NO CUMPLE") + ' · ' + esc(c.name) + '</div><div style="margin:6px 0">' + esc(c.val) + '</div><div class="l">Meta mínima: ' + esc(c.rule) + '</div></div>').join("") + '</div>';
   h += '<div class="verdict">' + esc(verdict) + '</div>';
-  h += '<p style="margin:0 0 8px"><b>Decisión frente al precio de referencia</b> ($9,5 millones de pago único + $350 mil al mes): <b>' + fmt(A.paPct, 0) + ' %</b> contrataría (' + fmt(A.paFirmPct, 0) + ' % sin condiciones).</p>';
+  h += '<p style="margin:0 0 8px"><b>Decisión frente a la oferta de SOFUX</b> (' + rows.filter(r => r.v === 2).length + ' respuestas con los planes actuales, desde $750 mil; ' + rows.filter(r => r.v !== 2).length + ' con la oferta anterior de $9,5 millones + $350 mil al mes): <b>' + fmt(A.paPct, 0) + ' %</b> contrataría (' + fmt(A.paFirmPct, 0) + ' % sin condiciones).</p>';
   h += '<p class="muted" style="font-size:13px">Las personas encuestadas no se eligieron al azar: tome estos resultados como una primera exploración del mercado de Bogotá. Las metas mínimas son una propuesta y deben revisarse con su modelo financiero.</p>';
   /* --- Mercadeo: puntaje, embudo, grupos, mensajes --- */
   const V = viabilityScore(A), nV = A.n;
@@ -1075,7 +1093,7 @@ function loadAdmin(all, citas, conts) {
     '<div class="hero2">' + ringSvg(V.score) + '<div class="tx"><b>' + lvlTxt + '</b><span class="muted" style="font-size:13px">El círculo muestra qué tan cerca está cada criterio de su meta mínima (promedio). El resultado final depende de cuántos criterios se cumplen (' + okCount + ' de 4).</span></div></div>' +
     '<div class="bars">' + V.parts.map((x, i) => '<div class="r"><span>' + critN[i] + '</span><span class="t"><i style="width:' + (x * 100).toFixed(0) + '%"></i></span><span class="n">' + (x * 100).toFixed(0) + ' %</span></div>').join("") + '</div></div>';
   const stages = [["Respondieron (válidas)", nV], ["Pierden 6 h/sem o más", rows.filter(r => r.p2 >= 2).length], ["Muestran interés (4-5), estimado con la Parte 2", Math.round(nV * rows.filter(r => r.p6 >= 4).length / Math.max(1, rows.filter(r => r.p6 != null).length))],
-    ["Aceptan su precio mínimo", rows.filter(r => r.p11 >= cfg.pIni && r.p12 >= cfg.pMes).length], ["Contratarían con el precio de referencia", rows.filter(r => r.pa === 0 || r.pa === 1).length]];
+    ["Aceptan su precio mínimo", rows.filter(r => r.p11 >= cfg.pIni && r.p12 >= cfg.pMes).length], ["Contratarían con la oferta presentada", rows.filter(r => r.pa === 0 || r.pa === 1).length]];
   h += '<div class="card"><h3 style="margin-top:0">Del interés a la contratación</h3><p class="muted" style="font-size:13px;margin-top:0">De cada 100 personas que respondieron, cuántas avanzan en cada etapa.</p><div class="bars">' +
     stages.map(x => '<div class="r"><span>' + x[0] + ' (' + x[1] + ')</span><span class="t"><i style="width:' + (nV ? 100 * x[1] / nV : 0).toFixed(0) + '%"></i></span><span class="n">' + (nV ? fmt(100 * x[1] / nV, 0) : "0") + ' %</span></div>').join("") + '</div></div></div>';
   const day = 86400000, today = new Date(); today.setHours(0, 0, 0, 0);
@@ -1178,7 +1196,8 @@ function loadAdmin(all, citas, conts) {
     bars("Factores determinantes al contratar (P8) · respuestas: " + rows.filter(r => r.p8 != null).length, QBY.p8, rows.filter(r => r.p8 != null), "p8", true) +
     bars("Dudas para contratar (P9) · respuestas: " + rows.filter(r => r.p9 != null).length, QBY.p9, rows.filter(r => r.p9 != null), "p9", true) +
     bars("Inversión única máxima (P11)", QBY.p11, rows, "p11") +
-    bars("Decisión frente al precio de referencia (PA)", QBY.pa, rows, "pa") +
+    bars("Decisión frente a la oferta presentada (PA)", QBY.pa, rows, "pa") +
+    bars("Plan que más le interesaría (PP) · solo respuestas con los planes actuales", QBY.pp, rows.filter(r => r.v === 2), "pp") +
     bars("Mensualidad máxima (P12)", QBY.p12, rows, "p12") +
     bars("Rol de quien responde (F1)", QBY.f1, rows, "f1") +
     bars("Área a cargo (FA) · solo encargados de área, respuestas: " + rows.filter(r => r.f1 === 2).length, QBY.fa, rows.filter(r => r.f1 === 2), "fa") +
@@ -1191,8 +1210,8 @@ function loadAdmin(all, citas, conts) {
     '<h3>Enlaces para compartir (muestran por dónde llegan las respuestas)</h3>' +
     ["whatsapp", "linkedin", "correo", "referido"].map(c => '<div class="row" style="margin:6px 0"><code style="font-size:12px;word-break:break-all;flex:1">' + esc(base + "?src=" + c) + '</code><button class="btn small ghost cpl" data-u="' + esc(base + "?src=" + c) + '">Copiar</button></div>').join("") + '</div>' +
     '</div>';
-  const OBJ = { f1: "Perfil", fa: "Perfil", f2: "Perfil", f3: "Perfil", f3b: "Perfil", pr: "Objetivo específico 1", p2: "Objetivo específico 1", pq: "Objetivo específico 1", p4: "Objetivo específico 1", pu: "Objetivo específico 2", p8: "Objetivo específico 2", p9: "Objetivo específico 2", fb: "Objetivo específico 2", p6: "Objetivo específico 3", p11: "Objetivo específico 3", p12: "Objetivo específico 3", pa: "Objetivo específico 3" },
-  MIDE = { em: "Contacto para el diagnóstico", f1: "Filtro: quién decide", fa: "Grupo: área a cargo", fb: "Producto: áreas beneficiadas", f2: "Filtro: tamaño de la empresa", f3: "Grupo prioritario (Plaza)", pr: "Problema real · Producto", p2: "Problema real · Producto", pq: "Problema real · Producto", p3: "Problema real · Producto", p4: "Oportunidad en el mercado · Competencia", pr: "Producto: partes del aplicativo", pu: "Producto: prioridad", p6: "Interés de compra", p8: "Producto: lo que valoran", p9: "Promoción: objeciones", p11: "Precio", p12: "Precio", pa: "Precio: decisión de contratar" };
+  const OBJ = { f1: "Perfil", fa: "Perfil", f2: "Perfil", f3: "Perfil", f3b: "Perfil", pr: "Objetivo específico 1", p2: "Objetivo específico 1", pq: "Objetivo específico 1", p4: "Objetivo específico 1", pu: "Objetivo específico 2", p8: "Objetivo específico 2", p9: "Objetivo específico 2", fb: "Objetivo específico 2", p6: "Objetivo específico 3", p11: "Objetivo específico 3", p12: "Objetivo específico 3", pa: "Objetivo específico 3", pp: "Objetivo específico 3" },
+  MIDE = { em: "Contacto para el diagnóstico", f1: "Filtro: quién decide", fa: "Grupo: área a cargo", fb: "Producto: áreas beneficiadas", f2: "Filtro: tamaño de la empresa", f3: "Grupo prioritario (Plaza)", pr: "Problema real · Producto", p2: "Problema real · Producto", pq: "Problema real · Producto", p3: "Problema real · Producto", p4: "Oportunidad en el mercado · Competencia", pr: "Producto: partes del aplicativo", pu: "Producto: prioridad", p6: "Interés de compra", p8: "Producto: lo que valoran", p9: "Promoción: objeciones", p11: "Precio", p12: "Precio", pa: "Precio: decisión de contratar", pp: "Precio: plan de interés" };
   const COND = { pu: "Solo se muestra si la persona marcó 2 o más procesos en la pregunta de procesos de la Parte 1.", fa: "Solo se muestra si en F1 eligió «Encargado o jefe de un área de la empresa».", fb: "Solo se muestra si en F1 eligió «Encargado o jefe de un área de la empresa»." };
   const qopts = q => {
     if (q.type === "matrix") return '<p class="muted" style="margin:6px 0 0;font-size:13px">Escala ' + esc(q.lo) + ' a ' + esc(q.hi) + ' para cada situación:</p><ul>' + q.rows.map(x => '<li>' + esc(x) + '</li>').join("") + '</ul>';
@@ -1236,6 +1255,16 @@ function loadAdmin(all, citas, conts) {
   h += '</div>';
   root().innerHTML = h;
 
+  document.querySelectorAll('[data-tab]').forEach(d => { const t = tabs.find(x => x[0] === d.dataset.tab); if (t) d.setAttribute('data-title', t[1]); });
+  const pdfall = $("#pdfall");
+  if (pdfall) pdfall.onclick = () => {
+    const t0 = document.title, fch = new Date().toISOString().slice(0, 10);
+    document.title = "Resultados encuesta SOFUX " + fch;
+    document.body.classList.add("printall");
+    const fin = () => { document.body.classList.remove("printall"); document.title = t0; window.removeEventListener("afterprint", fin); };
+    window.addEventListener("afterprint", fin);
+    setTimeout(() => window.print(), 100);
+  };
   const showTab = t => { ADMIN_TAB = t; document.querySelectorAll('[data-tab]').forEach(d => d.hidden = d.dataset.tab !== t); document.querySelectorAll('.tb').forEach(b => b.classList.toggle('on', b.dataset.t === t)); };
   document.querySelectorAll('.tb').forEach(b => b.onclick = () => showTab(b.dataset.t));
   document.querySelectorAll('.vr').forEach(b => b.onclick = () => { const d = document.getElementById('d_' + b.dataset.i); d.hidden = !d.hidden; b.textContent = d.hidden ? 'Ver' : 'Ocultar'; });
@@ -1279,7 +1308,13 @@ function loadAdmin(all, citas, conts) {
   $("#cI").onchange = e => { cfg.pIni = +e.target.value; saveCfg(cfg); loadAdmin(all, citas); };
   $("#cM").onchange = e => { cfg.pMes = +e.target.value; saveCfg(cfg); loadAdmin(all, citas); };
   document.querySelectorAll(".cpl").forEach(b => b.onclick = () => { copy(b.dataset.u); b.textContent = "¡Copiado!"; });
-  $("#csv").onclick = () => downloadCsv(all);
+  $("#csv").onclick = () => exportXlsx(all, "encuesta_sofux_");
+  $("#solor").onclick = () => exportXlsx(all, "respuestas_sofux_", false, true);
+  $("#delimp").onclick = () => {
+    const ids = all.filter(r => r.imp).map(r => r._id);
+    if (!ids.length) return alert("No hay respuestas importadas.");
+    if (confirm("¿Eliminar las " + ids.length + " respuestas importadas? Las respuestas contestadas directamente en la encuesta no se tocan. No se puede deshacer.")) removeItems(ids, []);
+  };
   const seed = $("#seed"); if (seed) seed.onclick = () => {
     const fr = fakeRows(40); fr.forEach((r, i) => r._id = "s" + Date.now() + i);
     localStorage.setItem(LS_DEMO, JSON.stringify(all.concat(fr)));
@@ -1305,6 +1340,119 @@ function downloadCsv(all) {
   document.body.appendChild(a); a.click(); a.remove();
 }
 
+/* ===== Excel: exportar e importar ===== */
+let XLSX_P = null;
+function loadXLSX() {
+  if (window.XLSX) return Promise.resolve(window.XLSX);
+  if (!XLSX_P) XLSX_P = new Promise((res, rej) => { const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"; sc.onload = () => res(window.XLSX); sc.onerror = () => { XLSX_P = null; rej(new Error("xlsx")); }; document.head.appendChild(sc); });
+  return XLSX_P;
+}
+const XL_QS = () => Q.filter(q => ["single", "multi", "pick", "scale", "text"].indexOf(q.type) >= 0 && q.id !== "em");
+const XL_OPTS = q => q.opts || PR;
+function exportXlsx(all, name, tpl, only) {
+  const load = () => window.ExcelJS ? Promise.resolve(window.ExcelJS) : new Promise((res, rej) => { const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"; sc.onload = () => res(window.ExcelJS); sc.onerror = () => rej(new Error("exceljs")); document.head.appendChild(sc); });
+  load().then(E => {
+    const qs = XL_QS(), pad = n => String(n).padStart(2, "0"), num = {}; let nq = 0; Q.forEach(q => { if (q.type !== "info") num[q.id] = ++nq; });
+    const fmt = t => { const d = new Date(t); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()); };
+    const val = (q, v) => v == null ? "" : q.type === "multi" ? (Array.isArray(v) ? v.map(i => XL_OPTS(q)[i]).join(" | ") : "") : (q.type === "single" || q.type === "pick") ? (XL_OPTS(q)[v] != null ? XL_OPTS(q)[v] : v) : v;
+    const NAVY = "FF04121F", TEAL = "FF2DD4C8", BAND = "FFEAF9F8", LINE = "FFD3E4E8";
+    const thin = { style: "thin", color: { argb: LINE } };
+    const wb = new E.Workbook(); wb.creator = "SOFUX"; wb.created = new Date();
+    const style = (ws, ncols, nrows, hh) => {
+      const h = ws.getRow(1); h.height = hh;
+      for (let c = 1; c <= ncols; c++) {
+        const cell = h.getCell(c);
+        cell.font = { name: "Calibri", bold: true, size: 11, color: { argb: "FFFFFFFF" } };
+        cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: NAVY } };
+        cell.alignment = { vertical: "middle", horizontal: "center", wrapText: true };
+        cell.border = { bottom: { style: "medium", color: { argb: TEAL } }, left: { style: "thin", color: { argb: "FF1B3A52" } }, right: { style: "thin", color: { argb: "FF1B3A52" } } };
+      }
+      for (let r = 2; r <= nrows; r++) {
+        const row = ws.getRow(r);
+        for (let c = 1; c <= ncols; c++) {
+          const cell = row.getCell(c);
+          cell.font = { name: "Calibri", size: 10, color: { argb: "FF10202C" } };
+          cell.alignment = { vertical: "top", wrapText: true };
+          cell.border = { top: thin, bottom: thin, left: thin, right: thin };
+          if (r % 2 === 1) cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: BAND } };
+        }
+      }
+      ws.views = [{ state: "frozen", xSplit: 1, ySplit: 1 }];
+      ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: ncols } };
+      ws.properties.tabColor = { argb: TEAL };
+    };
+    const rows = all.slice().sort((a, b) => (a.t || 0) - (b.t || 0));
+    const ws = wb.addWorksheet("Respuestas");
+    const heads = ["Fecha", "Duración (segundos)", "Canal"].concat(qs.map(q => num[q.id] + ". " + q.title));
+    ws.addRow(heads);
+    rows.forEach(r => ws.addRow([r.t ? fmt(r.t) : "", r.dur == null ? "" : r.dur, r.src || ""].concat(qs.map(q => val(q, r[q.id])))));
+    ws.columns = heads.map((h, i) => ({ width: i === 0 ? 17 : i === 1 ? 13 : i === 2 ? 14 : 34 }));
+    style(ws, heads.length, rows.length + 1, 92);
+    if (!only) {
+      const w2 = wb.addWorksheet("Preguntas y opciones");
+      w2.addRow(["N.º", "Pregunta", "Tipo de respuesta", "Opción"]);
+      qs.forEach(q => {
+        const t = q.type === "multi" ? "Varias opciones" : q.type === "scale" ? "Escala de 1 a 5" : q.type === "text" ? "Texto libre" : "Una opción";
+        if (q.type === "text" || q.type === "scale") w2.addRow([num[q.id], q.title, t, ""]); else XL_OPTS(q).forEach((o, i) => w2.addRow([i === 0 ? num[q.id] : "", i === 0 ? q.title : "", i === 0 ? t : "", o]));
+      });
+      w2.columns = [{ width: 7 }, { width: 70 }, { width: 22 }, { width: 70 }];
+      style(w2, 4, w2.rowCount, 30);
+    }
+    return wb.xlsx.writeBuffer().then(buf => {
+      const blob = new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name + new Date().toISOString().slice(0, 10) + ".xlsx";
+      document.body.appendChild(a); a.click(); a.remove();
+    });
+  }).catch(() => alert("No se pudo generar el Excel. Revise su conexión a internet e intente de nuevo."));
+}
+function importRows(rows, all) {
+  const norm = x => String(x == null ? "" : x).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, " ").trim();
+  const qs = XL_QS(), sig = o => JSON.stringify(qs.map(q => o[q.id] == null ? null : o[q.id]));
+  const keyOf = r => [r.t, r.dur, r.f1, r.f2, r.f3, r.p2].join("|");
+  const have = new Set(all.map(keyOf)), haveSig = new Set(all.map(sig)), good = [], bad = [];
+  const pickIdx = (q, c) => {
+    if (c === "" || c == null) return null;
+    const opts = XL_OPTS(q).map(norm), t = norm(c); let i = opts.indexOf(t);
+    if (i < 0 && (q.id === "pr" || q.type === "pick")) i = PR_SHORT.map(norm).indexOf(t);
+    if (i < 0 && /^\d+$/.test(t) && +t >= 1 && +t <= opts.length) i = +t - 1;
+    return i;
+  };
+  rows.forEach((row, n) => {
+    const L = "Fila " + (n + 2), g = {}; Object.keys(row).forEach(k => g[norm(k)] = row[k]);
+    if (Object.keys(row).every(k => row[k] === "")) return;
+    const o = { imp: 1 }, errs = [];
+    let t = g["fecha"], hasT = false;
+    if (t instanceof Date && !isNaN(t)) { o.t = t.getTime(); hasT = true; }
+    else if (typeof t === "string" && t.trim() && !isNaN(Date.parse(t.trim().replace(" ", "T")))) { o.t = Date.parse(t.trim().replace(" ", "T")); hasT = true; }
+    else o.t = Date.now() + n;
+    const d = g["duracion_s"]; o.dur = (d === "" || isNaN(+d)) ? 0 : Math.round(+d);
+    const cn = String(g["canal"] == null ? "" : g["canal"]).trim(); o.src = (cn || "importado").slice(0, 40);
+    qs.forEach(q => {
+      const c = g[q.id]; if (c === "" || c == null) return;
+      if (q.type === "single" || q.type === "pick") { const i = pickIdx(q, c); if (i < 0) errs.push(q.id.toUpperCase() + " «" + String(c).slice(0, 30) + "»"); else o[q.id] = i; }
+      else if (q.type === "multi") { const ix = String(c).split(/[|;]/).map(x => x.trim()).filter(Boolean).map(x => pickIdx(q, x)); if (!ix.length || ix.some(i => i < 0)) errs.push(q.id.toUpperCase() + " «" + String(c).slice(0, 30) + "»"); else o[q.id] = Array.from(new Set(ix)); }
+      else if (q.type === "scale") { if (Number.isInteger(+c) && +c >= 1 && +c <= 5) o[q.id] = +c; else errs.push(q.id.toUpperCase()); }
+      else o[q.id] = String(c).slice(0, 500);
+    });
+    ["f1", "f2", "f3", "p2"].forEach(k => { if (o[k] == null && errs.every(e => e.indexOf(k.toUpperCase()) !== 0)) errs.push("falta " + k.toUpperCase()); });
+    if (errs.length) { bad.push(L + ": " + errs.join(", ")); return; }
+    if (hasT ? have.has(keyOf(o)) : haveSig.has(sig(o))) { bad.push(L + ": ya existe (repetida)"); return; }
+    have.add(keyOf(o)); haveSig.add(sig(o)); good.push(o);
+  });
+  if (!good.length) { alert("No hay respuestas nuevas para importar." + (bad.length ? "\n\n" + bad.slice(0, 10).join("\n") : "")); return; }
+  if (!confirm("Se importarán " + good.length + " respuestas nuevas" + (bad.length ? " (se omiten " + bad.length + ": repetidas o con errores)" : "") + ".\n\nImporte solo respuestas reales de personas que contestaron la encuesta. Las que no traigan canal quedan como «importado». ¿Continuar?")) return;
+  const done = () => { alert("Importadas " + good.length + " respuestas." + (bad.length ? "\n\nOmitidas:\n" + bad.slice(0, 10).join("\n") : "")); renderAdmin(); };
+  if (DEMO) {
+    try { const cur = JSON.parse(localStorage.getItem(LS_DEMO) || "[]"); good.forEach((o, i) => { o._id = "i" + Date.now() + "_" + i; cur.push(o); }); localStorage.setItem(LS_DEMO, JSON.stringify(cur)); done(); } catch (e) { alert("No se pudo guardar: " + e.message); }
+  } else {
+    try {
+      initFirebase(); const up = {};
+      good.forEach(o => { up[firebase.database().ref(NODE).push().key] = o; });
+      firebase.database().ref(NODE).update(up).then(done).catch(e => alert("No se pudo importar: " + e.message + "\nVerifique que las reglas de Firebase permitan escribir."));
+    } catch (e) { alert("No se pudo importar: " + e.message); }
+  }
+}
+
 function fakeRows(n) {
   const R = m => Math.floor(Math.random() * m), out = [];
   for (let i = 0; i < n; i++) {
@@ -1315,7 +1463,7 @@ function fakeRows(n) {
       t: Date.now() - R(1e9), dur: 100 + R(200), src: ["whatsapp", "linkedin", "referido", "directo"][R(4)],
       f1: R(3), f2: R(3), f3: R(8), p2: R(5),
       p3: [0, 0, 0, 0].map(() => Math.max(1, Math.min(5, pain + R(3) - 1))), p4: R(4), pr: pr, pu: pr[R(pr.length)], p6: 1 + R(5),
-      p8: [R(5)], p9: [R(6)], pq: R(5), pc: R(6), p11: R(5), p12: R(5), pa: R(6)
+      p8: [R(5)], p9: [R(6)], pq: R(5), pc: R(6), p11: R(5), p12: R(5), pa: R(6), pp: R(3), v: 2
     });
   }
   out.forEach(r => { if (r.f1 === 2) { r.fa = R(9); const k = 1 + R(3), a = []; while (a.length < k) { const x = R(9); if (a.indexOf(x) < 0) a.push(x); } r.fb = a; } });
