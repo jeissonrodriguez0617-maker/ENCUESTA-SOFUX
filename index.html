@@ -596,7 +596,6 @@ function nextId(id) {
 
 function advance() {
   const id = st.cur, a = st.ans;
-  if (id === "f2" && a.f2 === 3) return screenOut("Por ahora SOFUX estudia empresas de hasta 200 personas. Gracias por su interés.");
   if (id === "pr") {
     if (a.pr.length === 1) a.pu = a.pr[0];
     else if (a.pu != null && a.pr.indexOf(a.pu) < 0) delete a.pu;
